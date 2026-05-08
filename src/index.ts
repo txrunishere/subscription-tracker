@@ -1,11 +1,8 @@
-import express from "express";
+import app from "./app.js";
+import { PORT } from "./config/env.js";
 
-const app = express();
-
-app.get("/", (_, res) => {
-  return res.json({ success: true });
-});
-
-app.listen(8080, "0.0.0.0", () => {
-  console.log("Server is running on PORT: 8080");
+app.listen(PORT, () => {
+  console.log(
+    `Subscription tracker API is running on http://localhost:${PORT}`,
+  );
 });
