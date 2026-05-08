@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { ResponsePayload } from "../types/index.js";
 
-export const sendResponse = <T>(
+export const ApiResponse = <T>(
   res: Response,
   statusCode: number,
   payload: ResponsePayload<T>,
