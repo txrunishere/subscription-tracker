@@ -6,3 +6,33 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id            String   @id @default(uuid())
+  name          String
+  price         Int
+  currency      String   @default("INR")
+  frequency     String
+  category      String
+  paymentMethod String
+  status        String
+  startDate     DateTime
+  renewalDate   DateTime
+  userId        String
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
