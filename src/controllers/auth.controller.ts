@@ -55,9 +55,41 @@ export const handleSignUp = asyncHandler(async (req, res) => {
 });
 
 export const handleSignIn = asyncHandler(async (req, res) => {
-  ApiResponse(res, 200, { message: "Sign In", success: true });
+  const { email, password } = req.body;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError("User not found!", 404);
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
+  if (!isPasswordValid) {
+    throw new ApiError("Invalid password!", 401);
+  }
+
+  const token = jwt.sign({ id: user.id }, JWT_SECRET as string, {
+    expiresIn: JWT_EXPIRY as any,
+  });
+
+  const responseUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+
+  ApiResponse(res, 200, {
+    message: "User signed in successfully!",
+    success: true,
+    data: { user: responseUser, token },
+  });
 });
 
-export const handleSignOut = asyncHandler(async (req, res) => {
-  ApiResponse(res, 200, { message: "Sign Out", success: true });
-});
+export const handleSignOut = asyncHandler(async (req, res) => {});
