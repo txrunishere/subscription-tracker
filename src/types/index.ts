@@ -3,3 +3,5 @@ export type ResponsePayload<T> = {
   message: string;
   data?: T;
 };
+
+export type RepeatType = "daily" | "weekly" | "monthly" | "yearly";
