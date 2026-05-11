@@ -33,3 +33,25 @@ export const createSubscription = asyncHandler(
     });
   },
 );
+
+export const getUserSubscriptions = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.params.id;
+
+    if (req.user !== userId) {
+      throw new ApiError("Unauthorized", 401);
+    }
+
+    const subscriptions = await prisma.subscription.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    ApiResponse(res, 200, {
+      message: "Subscriptions retrieved successfully",
+      success: true,
+      data: subscriptions,
+    });
+  },
+);
