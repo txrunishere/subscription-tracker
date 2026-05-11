@@ -40,6 +40,12 @@ export const subscriptionSchema = z.object({
   ),
   paymentMethod: z.string().min(1, "Payment method is required").trim(),
   startDate: z
-    .date()
-    .refine((date) => date <= new Date(), "Start date cannot be in the future"),
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Invalid date",
+    })
+    .refine(
+      (date) => new Date(date) <= new Date(),
+      "Start date cannot be in the future",
+    ),
 });
